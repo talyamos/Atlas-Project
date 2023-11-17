@@ -1,0 +1,46 @@
+nav{
+    height: 80px;
+}
+.nav-link{
+    color: white;
+}
+main{
+    background-image: url(images/pexels-ylanite-koppens-14436283.jpg);
+    background-position: center;
+    background-size: cover;
+}
+.displayCountries{
+    background: rgba(245, 245, 245, 0.591);
+    border-radius: 10px;
+}
+img{
+    width: 30%;
+}
+.details-title{
+    display: inline-block;
+    margin-right: 8px;
+}
+.flag-icon{
+    width: 30px;
+    height: 30px;
+    border-radius: 50px;
+    margin-right: 8px;
+}
+.countries-list{
+    list-style: none;
+    display: flex;
+    padding: 0;
+    
+    flex-wrap: wrap;
+}
+.countries-list > li{
+    padding-right: 16px;
+    margin-top: 16px;
+}
+.countries-list > li> a{
+    text-decoration: none;
+    color: black;
+}
+footer{
+    min-height: 80px;
+}
