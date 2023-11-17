@@ -1,5 +1,5 @@
 const getAllCountries = async () => {
-  const url = "https://restcountries.com/v3.1/all";
+  const url = "https://restcountries.com/v3.1/all/?fields=name";
   const res = await fetch(url);
   const data = await res.json();
   return data;

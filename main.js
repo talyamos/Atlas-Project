@@ -2,6 +2,7 @@ import {
   getCountryToCard,
   getCountryByName,
   getNeighboringCountries,
+  getAllCountries,
 } from "./functions.js";
 
 const mainContent = document.querySelector("#mainContent");
@@ -14,12 +15,42 @@ const startStates = [
   "Australia",
 ];
 const navCountry = document.querySelectorAll(".nav-link");
+const navbarBrand = document.querySelector(".navbar-brand");
+const seletCountry = document.querySelector("#seletCountry");
 
-navCountry.forEach((item) => (item.onclick = () => createCountryPage(item.id)));
+seletCountry.addEventListener("change", (event) => {
+  createCountryPage(event.target.value);
+  setTimeout(() => (seletCountry.options[0].selected = true), 5000);
+});
+navbarBrand.onclick = () => createHomePage();
+navCountry.forEach(
+  (item) =>
+    (item.onclick = () => {
+      createCountryPage(item.id);
+    })
+);
+
+const addCountriesToSelect = async () => {
+  try {
+    const data = await getAllCountries();
+
+    data.sort((a, b) => a.name.common.localeCompare(b.name.common));
+
+    data.map((c) => {
+      const option = document.createElement("option");
+      option.innerHTML = c.name.common;
+      seletCountry.append(option);
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
 
 const changePages = (newPage) => {
   const oldPage = mainContent.querySelector(".displayCountries");
-  mainContent.replaceChild(newPage, oldPage);
+  oldPage == null
+    ? mainContent.append(newPage)
+    : mainContent.replaceChild(newPage, oldPage);
 };
 
 const createHomePage = () => {
@@ -27,9 +58,7 @@ const createHomePage = () => {
   // holder.setAttribute("data-aos", "fade-up");
   // holder.setAttribute("data-aos-duration", "2000");
   holder.className =
-    "displayCountries container d-flex flex-wrap justify-content-between";
-
-  console.log(holder);
+    "displayCountries container d-flex flex-wrap justify-content-around";
 
   startStates.map(async (state) => {
     try {
@@ -37,7 +66,7 @@ const createHomePage = () => {
 
       const cardEl = document.createElement("div");
       cardEl.className = "card m-4";
-      cardEl.style = "width: 19rem";
+      cardEl.style = "width: 18rem";
 
       const img = document.createElement("img");
       img.className = "card-img-top";
@@ -49,6 +78,7 @@ const createHomePage = () => {
       body.className = "card-body";
 
       const title = document.createElement("h5");
+      title.className = "fw-bold";
       title.innerHTML = data.name.common;
 
       const description = document.createElement("p");
@@ -80,8 +110,7 @@ const createHomePage = () => {
       body.append(title, description, btn);
       cardEl.append(img, body);
       holder.append(cardEl);
-      mainContent.append(holder);
-      AOS.refresh();
+      changePages(holder);
     } catch (error) {
       console.log(error);
     }
@@ -124,7 +153,7 @@ const render = (c) => {
   displayCountry.className = "displayCountries container p-3";
   displayCountry.style =
     "background: rgba(245, 245, 245, 0.591); border-radius: 10px;";
-  displayCountry.innerHTML = `<h1 id="countryName" class="text-center">${c.name}</h1>`;
+  displayCountry.innerHTML = `<h1 id="countryName" class="text-center fw-bold">${c.name}</h1>`;
 
   const info = document.createElement("div");
   info.className = "info d-flex justify-content-between p-5";
@@ -145,7 +174,7 @@ const render = (c) => {
 
   const borders = document.createElement("p");
   borders.id = "borders";
-  borders.innerHTML = `<h5>Neighboring Countries:</h5>`;
+  borders.innerHTML = `<h5 class="details-title" >Neighboring Countries:</h5>`;
   const bordersList = createBorderList(c.borders);
   bordersList.className = "countries-list";
   borders.append(bordersList);
@@ -183,13 +212,12 @@ const createCountryPage = async (countryName) => {
     const country = {
       name: data.name.common,
       population: data.population.toLocaleString(),
-      capital: data.capital[0],
-      languages: data.languages,
+      capital: data.capital ? data.capital[0] : "no capital",
+      languages: data.languages ? data.languages : ["no language"],
       flag: data.flags.png,
       borders: data.borders,
       location: data.latlng,
     };
-    // return render(country);
     changePages(render(country));
   } catch (error) {
     console.log(error);
@@ -216,6 +244,7 @@ const searchCountry = async (event) => {
     const country = searchInput.value;
     const data = await getCountryByName(country);
     createCountryPage(data.name.official);
+    setTimeout(() => (searchInput.value = ""), 5000);
   } catch (error) {
     createNotFoundPage(error);
   }
@@ -223,5 +252,5 @@ const searchCountry = async (event) => {
 
 const searchForm = document.querySelector("#searchForm");
 searchForm.addEventListener("submit", searchCountry);
+addCountriesToSelect();
 createHomePage();
-AOS.refresh();

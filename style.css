@@ -1,8 +1,16 @@
+body{
+    font-family: 'Quicksand', sans-serif;
+}
 nav{
     height: 80px;
 }
 .nav-link{
     color: white;
+}
+
+.nav-link:hover{
+    color: white;
+    font-weight: bold;
 }
 main{
     background-image: url(images/pexels-ylanite-koppens-14436283.jpg);
@@ -10,8 +18,15 @@ main{
     background-size: cover;
 }
 .displayCountries{
-    background: rgba(245, 245, 245, 0.591);
+    /* background: rgba(245, 245, 245, 0.591); */
+    background: rgba(245, 245, 245, 0.737);
     border-radius: 10px;
+}
+.displayCountries span{
+    font-weight: 500;
+}
+.displayCountries a:hover{
+    font-weight: bold;
 }
 img{
     width: 30%;
@@ -19,6 +34,7 @@ img{
 .details-title{
     display: inline-block;
     margin-right: 8px;
+    font-weight: bold;
 }
 .flag-icon{
     width: 30px;
